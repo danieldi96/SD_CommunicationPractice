@@ -1,5 +1,5 @@
 from pyactor.context import set_context, create_host, shutdown
-import mapper as map
+import mapper
 
 def readFile():
 	i = 0
