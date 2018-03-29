@@ -3,7 +3,10 @@
 from pyactor.context import set_context, create_host, shutdown, serve_forever
 import io
 import mapper as mp
-global dictionary
+global dictionary, slaves
+
+slaves = 3                  #Numero de Slaves
+
 class Master(object):
     _tell = []
     _ask = ['readFile']
@@ -16,15 +19,16 @@ class Master(object):
             i += 1
         file.close()
 
-
 if __name__ == "__main__":
     dictionary = {}
     set_context()
-    host = create_host("http://127.0.0.1:1551")
+    host = create_host("http://127.0.0.1:1555")
     master1 = host.spawn('Master1', Master)
-    for slaves in
-        slave1 = host.spawn('Slave1', 'mapper/Mapper')
-        master1.readFile(slave1)
+    for num_slave in range(0,slaves):
+        if num_slave == (slaves-1):         #Si es el último elemento en vez de ser un mapper, será un reduce
+            reduce = host.spawn("Reduce", "reduce/Reducer")
+        slave = host.spawn("slave_"+str(num_slave), 'mapper/Mapper')
+        master1.readFile(slave)
     print "\n==================================\n"
     print dictionary
     serve_forever()
