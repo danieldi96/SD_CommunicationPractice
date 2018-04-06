@@ -2,33 +2,56 @@
 
 from pyactor.context import set_context, create_host, shutdown, serve_forever
 import io
-import mapper as mp
-global dictionary, slaves
+import os
+import sys
+import commands
+global dictionary, url_host, nombre_fichero, num_slaves
 
-slaves = 3                  #Numero de Slaves
+# Global variables
+url_host = "http://127.0.0.1:1500/"
+ip = "10.110.178.237:8000"
+nombre_fichero = "fichero.txt"
 
 class Master(object):
-    _tell = []
-    _ask = ['readFile']
+    _tell = ['readFile']
+    _ask = []
 
-    def readFile(self, slave):
-        i = 0
-        file = io.open("fichero.txt", "r", encoding="utf-8")
-        for line in iter(lambda: file.readline(), ""):
-            dictionary[i] = slave.map(i, line)
-            i += 1
-        file.close()
+    def readFile(self, host):
+        os.chdir("./files")
+        try:
+            global num_slaves
+            num_slaves = int(sys.argv[1])
+            file = io.open(nombre_fichero, "r", encoding="utf-8")
+            num_lines_file = int(commands.getoutput("wc -l "+nombre_fichero+" | cut -d ' ' -f 1"))
+        except IndexError:
+            print "===\nERROR. Pon un numero de slaves.\n==="
+        except IOError:
+            print "===\nERROR. Ha habido un problema al leer el fichero.\n==="
+        finally:
+            num_lines_map = num_lines_file/(num_slaves-1)
+            if (num_lines_file % (num_slaves-1)) != 0:
+                num_lines_map += 1
+            slaves = {}
+            for slave in range(0,num_slaves):                               #Creating slave's array
+                if slave == num_slaves-1:
+                    slaves[slave] = host.spawn('Reducer', 'reduce/Reducer')
+                else:
+                    slaves[slave] = host.spawn('Mapper_'+str(slave), 'mapper/Mapper')
+            for act_slave in range(0,num_slaves-1):
+                file_out = io.open("file_"+str(act_slave)+".txt", "w", encoding="utf-8")
+                for act_line in range(0,num_lines_map):
+                    line = file.readline()
+                    if line != "":
+                        file_out.write(line)
+            file.close()
+            file_out.close()
 
+
+# Main
 if __name__ == "__main__":
-    dictionary = {}
     set_context()
-    host = create_host("http://127.0.0.1:1555")
-    master1 = host.spawn('Master1', Master)
-    for num_slave in range(0,slaves):
-        if num_slave == (slaves-1):         #Si es el último elemento en vez de ser un mapper, será un reduce
-            reduce = host.spawn("Reduce", "reduce/Reducer")
-        slave = host.spawn("slave_"+str(num_slave), 'mapper/Mapper')
-        master1.readFile(slave)
-    print "\n==================================\n"
-    print dictionary
+    host_master = create_host(url_host)
+    master1 = host_master.spawn('master', 'master/Master')
+    print("Listening server at port "+url_host[-5:-1])
+    master1.readFile(host_master)
     serve_forever()
