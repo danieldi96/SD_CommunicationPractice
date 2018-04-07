@@ -30,9 +30,9 @@ if __name__ == "__main__":
     # We get the reference of master (server) and we create inmediately
     # a instance of Mapper class in it.
     # Reference to master (Server)
-    remote_master = host.lookup_url('http://127.0.0.1:1576/', Host)
+    remote_master = host.lookup_url('http://127.0.0.1:1500/', Host)
     # Spawn of Reducer class in master (Server)
-    server = remote_master.spawn('Reduce1','reduce/Reducer')
+    #server = remote_master.spawn('Reduce1','reduce/Reducer')
     try:
         print e2.wait_a_lot(timeout=1)
     except TimeoutError, e:
