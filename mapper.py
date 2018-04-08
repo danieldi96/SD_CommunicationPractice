@@ -29,7 +29,7 @@ class Mapper(object):
         file = urllib.urlopen(url)
         text = file.read().decode("latin-1")
         text = text.lower()
-        print "\n"+str(self.id)+"\n\nText:\n"+text #).encode("utf-8")
+        #print "\n"+str(self.id)+"\n\nText:\n"+text #).encode("utf-8")
         text = text.replace('.', '').replace(',', '').replace(':', '').replace('\n',' ').replace('\t','').replace(';','')
         word_split = text.split(" ")
         for word in word_split:
@@ -46,21 +46,19 @@ class Mapper(object):
 
 if __name__ == "__main__":
     global num_slaves
-    set_context()
-    host = create_host('http://127.0.0.1:2805')
-
-    # We get the reference of master (server) and we create inmediately
-    # a instance of Mapper class in it.
-
-    # Reference to hosts
-    remote_reduce = host.lookup_url("http://127.0.0.1:1700/Reducer", 'Reducer', 'reduce')
     try:
         num_slaves = int(sys.argv[1])
     except IndexError:
         print "===\nERROR. Pon un numero de slaves\n"
+
+    set_context()
+    host = create_host('http://127.0.0.1:2805')
+    print "\n\tCargando...\n"
+    # Reference to hosts
+    remote_reduce = host.lookup_url("http://127.0.0.1:1700/Reducer", 'Reducer', 'reduce')
     for i in range(0,num_slaves-1):
         remote_mapper = host.lookup_url("http://127.0.0.1:1600/Mapper_"+str(i), 'Mapper', 'mapper')
         print remote_mapper
         remote_mapper.map(remote_reduce)
-    sleep(3)
+    sleep(60)
     shutdown()

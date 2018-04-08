@@ -1,0 +1,3 @@
+
+	Las palabras repetidas son: (<palabra, #veces>)
+a : 2tal : 1ver : 1la : 1esto : 1practica : 1primera : 1que : 1hola : 4y : 1es : 1sd : 1
