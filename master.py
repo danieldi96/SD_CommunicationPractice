@@ -16,6 +16,7 @@ nombre_fichero = "fichero.txt"
 class Master(object):
     _tell = ['readFile']
     _ask = []
+    _ref = ['readFile']
 
     def readFile(self, host_map, host_red):
         url = "http://"+ip_files+"/"+nombre_fichero
@@ -55,11 +56,11 @@ if __name__ == "__main__":
     set_context()
     host_master = create_host(url_host)
     master1 = host_master.spawn('master', 'master/Master')
-    #remote_reduce = host_reducer.spawn('Reducer', 'reduce/Reducer')
-    print("Listening server at port "+url_host[-5:-1])
+    print "-------------MAP REDUCE----------------\nHosts:"
+    print("Listening Master Server at port "+url_host[-5:-1])
     host_mapper = create_host('http://127.0.0.1:1600/')
     print "Server Mapper at port 1600"
     host_reducer = create_host('http://127.0.0.1:1700/')
-    print "Server Reducer at port 1700"
+    print "Server Reducer at port 1700\n"
     master1.readFile(host_mapper, host_reducer)
     serve_forever()
