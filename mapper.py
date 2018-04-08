@@ -31,9 +31,7 @@ class Mapper(object):
         text = text.lower()
         print "\n"+str(self.id)+"\n\nText:\n"+text #).encode("utf-8")
         text = text.replace('.', '').replace(',', '').replace(':', '').replace('\n',' ').replace('\t','').replace(';','')
-        #line_split = text.split("\n")
         word_split = text.split(" ")
-        #print word_split
         for word in word_split:
             if word != "":
                 word = word.encode("latin-1")
