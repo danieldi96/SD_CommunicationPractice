@@ -42,7 +42,7 @@ class Master(object):
                     slaves[slave] = host_red.spawn('Reducer', 'reduce/Reducer')
                 else:
                     slaves[slave] = host_map.spawn('Mapper_'+str(slave), 'mapper/Mapper')
-            os.chdir("./files")
+            os.chdir("../files")
             for act_slave in range(0,num_slaves-1):
                 file_out = io.open("file_"+str(act_slave)+".txt", "w", encoding="latin-1")      #We read in Latin to read all chars of Spanish
                 for act_line in range(0,num_lines_map):
