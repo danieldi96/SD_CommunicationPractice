@@ -4,7 +4,7 @@ import io
 import sys
 import urllib
 global ip_files, num_slaves, program
-ip_files = "192.168.1.100:8000"
+ip_files = "192.168.1.102:8000"
 
 # Mapper
 class Mapper(object):
@@ -27,14 +27,14 @@ class Mapper(object):
         words = {}
         url = "http://"+ip_files+"/file_"+str(self.id)[-1:]+".txt"
         file = urllib.urlopen(url)
-        text = file.read().decode("latin-1")
+        text = file.read()
+        #print "TEXTO:\n"+text
         text = text.lower()
-        #print "\n"+str(self.id)+"\n\nText:\n"+text #).encode("utf-8")
         text = text.replace('.', '').replace(',', '').replace(':', '').replace('\n',' ').replace('\t','').replace(';','')
         word_split = text.split(" ")
         for word in word_split:
             if word != "":
-                word = word.encode("latin-1")
+                #word = word.encode("latin-1")
                 if word.endswith('-') or word.startswith('-'):  #eliminamos los guiones de las conversaciones
                     word.replace('-','')
                 words[word] = words.get(word, 0) + 1  # Get -> Getordefault
@@ -42,17 +42,17 @@ class Mapper(object):
             remote_reducer.wc(words, self.id[-1:])
         elif program == 'CW':
             remote_reducer.cw(words, self.id[-1:])
-
+        else:
+            print "\n\tEl programa seleccionado no se encuentra disponible.\n"
 
 if __name__ == "__main__":
+    set_context()
     global num_slaves
     try:
         num_slaves = int(sys.argv[1])
     except IndexError:
         print "===\nERROR. Pon un numero de slaves\n"
-
-    set_context()
-    host = create_host('http://127.0.0.1:2805')
+    host = create_host('http://127.0.0.1:1900/host')
     print "\n\tCargando...\n"
     # Reference to hosts
     remote_reduce = host.lookup_url("http://127.0.0.1:1700/Reducer", 'Reducer', 'reduce')
@@ -60,5 +60,5 @@ if __name__ == "__main__":
         remote_mapper = host.lookup_url("http://127.0.0.1:1600/Mapper_"+str(i), 'Mapper', 'mapper')
         print remote_mapper
         remote_mapper.map(remote_reduce)
-    sleep(60)
+    remote_reduce.finished(host)
     shutdown()

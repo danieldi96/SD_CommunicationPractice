@@ -1,20 +1,23 @@
 from pyactor.context import set_context, create_host, Host, sleep, shutdown
 import collections
 import sys
-global dicc, num_slaves, dictionary_wc
+global dicc, num_slaves, dictionary_wc, finished
 dicc = {}
 dictionary_wc = {}
+
 class Reducer(object):
-    _tell = ['shuffle','reduce', 'wc', 'cw']
+    _tell = ['shuffle', 'wc', 'cw', 'finished']
     _ask = [] 		#sincrono
-    _ref = []
+    _ref = ['finished']
 
     def __init__(self):
-        global num_slaves
+        global num_slaves, finished
         try:
             num_slaves = int(sys.argv[1])
         except IndexError:
             print ""
+        finally:
+            finished = (num_slaves-1)
 
     def shuffle(self, dic_map):
         global dicc
@@ -26,11 +29,11 @@ class Reducer(object):
         return dicc
 
     def wc(self, dic_map, id_map):
-        global dictionary_wc
+        global dictionary_wc, finished
         dictionary_wc = self.shuffle(dic_map)
-        if int(id_map) == (num_slaves-2):
+        finished -= 1
+        if finished == 0:
             file_out = open("palabras_repetidas.txt","w")
-            sleep(3)
             print "\n\tLas palabras repetidas son: (<palabra, #veces>)"
             file_out.write("\n\tLas palabras repetidas son: (<palabra, #veces>)\n")
             for key in dictionary_wc.keys():
@@ -41,10 +44,17 @@ class Reducer(object):
 
 
     def cw(self, dic_map, id_map):
+        global finished
         dictionary = self.shuffle(dic_map)
         res = 0
         for key in dictionary.keys():
             res = res + dictionary[key]
-        if int(id_map) == (num_slaves-2):
-            sleep(59)
-            print "\t El archivo tiene en total "+str(res)+" palabras."
+        finished -= 1
+        if finished == 0:
+            print "\n\n\t El archivo tiene en total "+str(res)+" palabras."
+
+    def finished(self, host):
+        print "\n\tEsperando...\n"
+        if finished == 0:
+            shutdown(host)
+        return False

@@ -10,8 +10,7 @@ global dictionary, url_host, nombre_fichero, num_slaves
 
 # Global variables
 url_host = "http://127.0.0.1:1500/"
-ip_files = "192.168.1.100:8000"
-nombre_fichero = "fichero.txt"
+ip_files = "192.168.1.102:8000"
 
 class Master(object):
     _tell = ['readFile']
@@ -19,15 +18,18 @@ class Master(object):
     _ref = ['readFile']
 
     def readFile(self, host_map, host_red):
-        url = "http://"+ip_files+"/"+nombre_fichero
-        urllib.urlretrieve(url, nombre_fichero)                 #We download the file from server
         try:
-            global num_slaves
+            global num_slaves, nombre_fichero
+            if len(sys.argv) != 4:
+                raise IndexError
             num_slaves = int(sys.argv[1])
+            nombre_fichero = str(sys.argv[3])
+            url = "http://"+ip_files+"/"+nombre_fichero
+            urllib.urlretrieve(url, nombre_fichero)                 #We download the file from server
             file = io.open(nombre_fichero, "r", encoding="latin-1")         #We read in Latin to read all chars of Spanish
             num_lines_file = int(commands.getoutput("wc -l "+nombre_fichero+" | cut -d ' ' -f 1"))
         except IndexError:
-            print "===\nERROR. Pon un numero de slaves.\n==="
+            print "===\nERROR. Los argumentos nos son válidos.\n==="
         except IOError:
             print "===\nERROR. Ha habido un problema al leer el fichero.\n==="
         finally:
