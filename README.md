@@ -1,6 +1,6 @@
 # MapReduce
 
-[![GitHub]](https://github.com/pedrotgn/pyactor)
+[![GitHub](https://assets-cdn.github.com/images/modules/logos_page/GitHub-Logo.png)](https://github.com/pedrotgn/pyactor)
 
 This is an implementation of [MapReduce](https://www.tutorialspoint.com/es/hadoop/hadoop_mapreduce.htm) in python using The [PyActor](https://github.com/pedrotgn/pyactor) library.
 
