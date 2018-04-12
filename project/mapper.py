@@ -39,17 +39,18 @@ class Mapper(object):
 if __name__ == "__main__":
     set_context()
     try:
-        if len(sys.argv) != 2:
+        if len(sys.argv) != 3:
             raise IndexError
         id_mapper = int(sys.argv[1])
+        ip = str(sys.argv[2])
     except IndexError:
         print   "\n----------------\nERROR. Los argumentos no son válidos.\n----------------\nArgumentos:"
         print   "\n\tpython [nombre_archivo] [id_mapper] [ip_servidor_archivos*]\n\n\t* si ip_servidor_archivos es 'localhost' = 127.0.0.1\n"
         shutdown()
     finally:
-        host = create_host('http://127.0.0.1:190%s/' % str(id_mapper))
+        host = create_host('http://127.0.0.1:190%s/' % id_mapper)
         print "\n\tCargando...\n"
-        remote_mapper = host.lookup_url("http://127.0.0.1:160%s/Mapper"%str(id_mapper), 'Mapper', 'mapper')
-        remote_master = host.lookup_url("http://127.0.0.1:1500/regis", 'Registry', 'master')
+        remote_mapper = host.lookup_url("http://%s:160%s/Mapper"%(ip, id_mapper), 'Mapper', 'mapper')
+        remote_master = host.lookup_url("http://%s:1500/regis"%ip, 'Registry', 'master')
         remote_master.bind("Mapper_%s"%str(id_mapper))
         print remote_mapper

@@ -34,14 +34,14 @@ def splitFile(name_f, ip_files, num_mappers):
 def create_hosts():
     global registry, remote_reduce, list_mappers
     list_mappers = {}
-    host_master = create_host("http://127.0.0.1:1500/")
+    host_master = create_host("http://%s:1500/" % ip_files)
     print "-------------MAP REDUCE----------------\nHosts:\nListening Master Server at port 1500"
     registry = host_master.spawn("regis", 'master/Registry')
     for i in range(0, num_mappers):
-        host_mapper = create_host('http://127.0.0.1:160%s/' % str(i))
+        host_mapper = create_host('http://%s:160%s/' % (ip_files, i))
         list_mappers[i] = host_mapper.spawn("Mapper", 'mapper/Mapper')
-        print "Server Mapper %s at port 160%s" %(str(i),str(i))
-    host_reducer = create_host('http://127.0.0.1:1700/')
+        print "Server Mapper %s at port 160%s" %(i, i)
+    host_reducer = create_host('http://%s:1700/'%ip_files)
     remote_reduce = host_reducer.spawn('Reducer', 'reduce/Reducer')
     print "Server Reducer at port 1700\n"
 
