@@ -67,11 +67,11 @@ if __name__ == "__main__":
             ip_files = "127.0.0.1"
         create_hosts()
         name_file = raw_input("\nNombre del fichero: ")
-        repeticiones = raw_input("\nNúmero de repeticiones del archivo (1 = Lectura normal)")
+        repeticiones = raw_input("\nNúmero de repeticiones del archivo (1 = Lectura normal): ")
         waitMappers()
         if repeticiones != 1:
             os.chdir("../examples")
-            os.system("python scrypt.py %s %s" % (name_file, repeticiones))
+            os.system("python script.py %s %s" % (name_file, repeticiones))
             name_file = "Extended_"+name_file
             os.system("python -m SimpleHTTPServer")
             os.chdir("../project")
