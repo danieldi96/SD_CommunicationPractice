@@ -44,6 +44,9 @@ def create_hosts():
     host_reducer = create_host('http://%s:1700/'%ip_files)
     remote_reduce = host_reducer.spawn('Reducer', 'reduce/Reducer')
     print "Server Reducer at port 1700\n"
+    os.chdir("../examples")
+    os.system("python -m SimpleHTTPServer")
+    os.chdir("../project")
 
 def waitMappers():
     print "\n\tEsperando a mappers..."
@@ -70,11 +73,8 @@ if __name__ == "__main__":
         repeticiones = raw_input("\nNúmero de repeticiones del archivo (1 = Lectura normal): ")
         waitMappers()
         if repeticiones != 1:
-            os.chdir("../examples")
-            os.system("python script.py %s %s" % (name_file, repeticiones))
+            os.system("python ../examples/script.py %s %s" % (name_file, repeticiones))
             name_file = "Extended_"+name_file
-            os.system("python -m SimpleHTTPServer")
-            os.chdir("../project")
         remote_reduce.start(num_mappers)
         splitFile(name_file, ip_files, num_mappers)
         remote_reduce.startCrono()

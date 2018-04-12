@@ -1,4 +1,5 @@
 # -*- coding = utf-8 -*-
+from pyactor.context import sleep
 import os, sys
 
 if __name__ == "__main__" :
@@ -10,4 +11,5 @@ if __name__ == "__main__" :
     finally:
         for i in range(0, mappers_total):
             print "MAPPER "+str(i)
-            os.system("python mapper.py %s %s" % (i, ip))
+            os.system("python mapper.py %s %s &" % (i, ip))
+            sleep(1)
