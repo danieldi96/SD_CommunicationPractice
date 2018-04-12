@@ -45,7 +45,7 @@ def create_hosts():
     remote_reduce = host_reducer.spawn('Reducer', 'reduce/Reducer')
     print "Server Reducer at port 1700\n"
     os.chdir("../examples")
-    os.system("python -m SimpleHTTPServer")
+    os.system("python -m SimpleHTTPServer &")
     os.chdir("../project")
 
 def waitMappers():
@@ -74,6 +74,7 @@ if __name__ == "__main__":
         waitMappers()
         if repeticiones != 1:
             os.system("python ../examples/script.py %s %s" % (name_file, repeticiones))
+            print "python ../examples/script.py %s %s" % (name_file, repeticiones)
             name_file = "Extended_"+name_file
         remote_reduce.start(num_mappers)
         splitFile(name_file, ip_files, num_mappers)

@@ -9,7 +9,7 @@ if __name__ == "__main__" :
     except IndexError, SyntaxError:
         print "\n\tpython spawn_mappers.py [num_mappers_total] [ip_servidor_archivos*] \n\n\t* si ip_servidor_archivos es 'localhost' = 127.0.0.1\n"
     finally:
+        print "\nEjecutando..."
         for i in range(0, mappers_total):
-            print "MAPPER "+str(i)
+            #os.system("gnome-terminal -e 'bash -c \"python mapper.py %s %s; exec bash\"'" % (i, ip))
             os.system("python mapper.py %s %s &" % (i, ip))
-            sleep(1)

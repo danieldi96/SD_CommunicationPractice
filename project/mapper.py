@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from pyactor.context import set_context, create_host, Host, sleep, shutdown
+from pyactor.context import set_context, create_host, Host, sleep, shutdown, serve_forever
 import io, sys, urllib, collections, os
 # Mapper
 class Mapper(object):
@@ -54,3 +54,4 @@ if __name__ == "__main__":
         remote_master = host.lookup_url("http://%s:1500/regis"%ip, 'Registry', 'master')
         remote_master.bind("Mapper_%s"%str(id_mapper))
         print remote_mapper
+    serve_forever()
