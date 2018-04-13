@@ -74,9 +74,11 @@ if __name__ == "__main__":
         repeticiones = raw_input("\nNúmero de repeticiones del archivo (1 = Lectura normal): ")
         waitMappers()
         if repeticiones != 1:
+            os.chdir("../examples")
             os.system("python ../examples/script.py %s %s" % (name_file, repeticiones))
             print "python ../examples/script.py %s %s" % (name_file, repeticiones)
             name_file = "Extended_"+name_file
+            os.chdir("../project")
         remote_reduce.start(num_mappers)
         splitFile(name_file, ip_files, num_mappers)
         remote_reduce.startCrono()
