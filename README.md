@@ -12,13 +12,15 @@ Using master:
     python master.py (num_mappers) (ip*) (program*)
 
 ip* = If ip is "localhost" it's equal to '127.0.0.1'.
+
 program* = It can be 'WC' or 'CW' for 'WordCount' or 'CountWord', respectively
 
 Using mapper (many terminals as mappers you want):
 
     python master.py (id_mapper*) (ip*)
 
-id_mapper* = '0 to N-1' mappers you have in master.py. 
+id_mapper* = '0 to N-1' mappers you have in master.py.
+ 
 ip* = If ip is "localhost" it's equal to '127.0.0.1'.
 
 ## Tutorial of PyActor
