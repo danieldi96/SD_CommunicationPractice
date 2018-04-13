@@ -14,7 +14,7 @@ class Registry(object):
         self.nslaves = 0
 
     def bind(self, name):
-        print "\nServer registred ", name
+        print "\nServer registred %s\n" % name
         self.nslaves+=1
 
     def getMap(self):
@@ -23,7 +23,7 @@ class Registry(object):
 def splitFile(name_f, ip_files, num_mappers):
     try:
         os.chdir("./files")
-        os.system("\nwget http://%s:8000/%s"%(ip_files,name_f))                                             #We download the file from server
+        os.system("wget http://%s:8000/%s"%(ip_files,name_f))                                             #We download the file from server
         num_lines_map = int(commands.getoutput("wc -l "+name_f+" | cut -d ' ' -f 1"))/(num_mappers)         #split -l <num_lines> <name_f>
         os.system("split -l "+str(num_lines_map+1)+" "+name_f)
         os.system("rm "+name_f)
