@@ -48,6 +48,8 @@ if __name__ == "__main__":
         print   "\n\tpython [nombre_archivo] [id_mapper] [ip_servidor_archivos*]\n\n\t* si ip_servidor_archivos es 'localhost' = 127.0.0.1\n"
         shutdown()
     finally:
+        if ip == "localhost":
+            ip = "127.0.0.1"
         host = create_host('http://127.0.0.1:200%s/' % str(id_mapper))
         print "\n\tCargando...\n"
         remote_mapper = host.lookup_url("http://%s:160%s/Mapper"%(ip, id_mapper), 'Mapper', 'mapper')
