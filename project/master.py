@@ -76,7 +76,6 @@ if __name__ == "__main__":
         if repeticiones != 1:
             os.chdir("../examples")
             os.system("python ../examples/script.py %s %s" % (name_file, repeticiones))
-            print "python ../examples/script.py %s %s" % (name_file, repeticiones)
             name_file = "Extended_"+name_file
             os.chdir("../project")
         remote_reduce.start(num_mappers)
