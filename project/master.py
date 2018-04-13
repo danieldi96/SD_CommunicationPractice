@@ -47,6 +47,7 @@ def create_hosts():
     os.chdir("../examples")
     os.system("python -m SimpleHTTPServer &")
     os.chdir("../project")
+    sleep(1)
 
 def waitMappers():
     print "\n\tEsperando a mappers..."
