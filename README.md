@@ -4,7 +4,7 @@
 
 This is an implementation of [MapReduce](https://www.tutorialspoint.com/es/hadoop/hadoop_mapreduce.htm) in python using The [PyActor](https://github.com/pedrotgn/pyactor) library.
 
-This project consists in the first SD's practice of [URV.](http://www.urv.cat/es/)
+This project consists in the first Distributed Systems practice of [URV.](http://www.urv.cat/es/)
 
 ## Script's Usage
 Using master:
@@ -15,7 +15,7 @@ Using master:
 
 Using mapper (many terminals as mappers you want):
 
-    python master.py (id_mapper*) (ip*)
+    python mapper.py (id_mapper*) (ip*)
         id_mapper* = '0 to N-1' mappers you have in master.py.
         ip* = If ip is "localhost" it's equal to '127.0.0.1'.
 

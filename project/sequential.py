@@ -9,9 +9,10 @@ def crono(num):
     global timeTotal
     if num == 0:
         timeTotal = time.time()
-    elif num == 1:
+    else:
         timeend = time.time()
         timeTotal = timeend - timeTotal
+
 def wc(word_split):
     for word in word_split:
         if word != "":
@@ -32,10 +33,14 @@ if __name__ == "__main__":
     if repeticiones != 1:
         os.system("python ../examples/script.py %s %s" % (name_file, repeticiones))
         name_file = "Extended_"+name_file
-    text = open(name_file, "r").read()
-    timeTotal = 0
     words = {}
     crono(0)
+    all_text = open(name_file, "r")
+    text = ""
+    line = ""
+    while line != "":
+        line = all_text.readline()
+        text = text + line
     for char in ".,:;!?()[]'\t'":
         text = text.replace(char, "")
     text = text.replace('\n',' ')

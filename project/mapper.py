@@ -3,16 +3,16 @@ from pyactor.context import set_context, create_host, Host, sleep, shutdown, ser
 import io, sys, urllib, collections, os
 # Mapper
 class Mapper(object):
-    _tell = ['wc', 'map']             #Methods asincronous
+    _tell = ['wc', 'map']
     _ask = []
-    _ref = ['map']              #Methods which we get a reference
+    _ref = ['map']              
 
     def wc(self, word_split):
         for word in word_split:
             if word != "":
                 if word.endswith("-") or word.startswith("-"):
                     word.replace("-", "")
-                self.words[word] = self.words.get(word, 0) + 1  # Get -> Getordefault
+                self.words[word] = self.words.get(word, 0) + 1
         return self.words
 
     def map(self, remote_reducer, ip_files, program, id_mapper):
