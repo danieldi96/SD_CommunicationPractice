@@ -1,6 +1,0 @@
-sudo: false
-
-lenguage: python
-
-python:
-	- 2.7
