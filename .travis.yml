@@ -11,6 +11,6 @@ install:
 
 script:
   - python -m SimpleHTTPServer &
-
+  - python -m coverage run test.py
 after_success:
   - codecov -t 99f4fb07-ce64-4168-8ba8-7bf604ab6082
