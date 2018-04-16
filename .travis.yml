@@ -1,0 +1,16 @@
+sudo: false
+
+lenguage: python
+
+python:
+  - 2.7
+
+install:
+  - pip install codecov
+  - pip install pyactor
+
+script:
+  - python -m SimpleHTTPServer &
+
+after_success:
+  - codecov -t 99f4fb07-ce64-4168-8ba8-7bf604ab6082
