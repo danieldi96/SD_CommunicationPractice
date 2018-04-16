@@ -3,7 +3,7 @@ from pyactor.context import set_context, create_host, Host, sleep, shutdown, ser
 import io, sys, urllib, collections, os
 # Mapper
 class Mapper(object):
-    _tell = ['start','map']             #Methods asincronous
+    _tell = ['wc', 'map']             #Methods asincronous
     _ask = []
     _ref = ['map']              #Methods which we get a reference
 

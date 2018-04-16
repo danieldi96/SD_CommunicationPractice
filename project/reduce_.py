@@ -5,8 +5,8 @@ import collections
 import sys
 
 class Reducer(object):
-    _tell = ['start', 'shuffle', 'wc', 'cw']
-    _ask = ['startCrono', 'stopCrono'] 		#sincrono
+    _tell = ['start', 'shuffle', 'wc', 'cw', 'startCrono', 'stopCrono']
+    _ask = [] 		#sincrono
     _ref = []
 
     def start(self, nmappers):
