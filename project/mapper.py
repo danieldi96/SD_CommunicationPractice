@@ -54,7 +54,7 @@ if __name__ == "__main__":
     finally:
         if ip == "localhost":
             ip = "127.0.0.1"
-        host = create_host('http://%s:160%s/' % (str(ip),str(id_mapper)))
+        host = create_host("http://%s:160%s/" % (ip,id_mapper))
         map = host.spawn("Mapper", "mapper/Mapper")
         print map
         print "\n\tCargando...\n"

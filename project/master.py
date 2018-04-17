@@ -65,7 +65,7 @@ def create_hosts():
     Creation of master's Host and HTTP Server
     """
     global host_master, registry
-    host_master = create_host("http://%s:1500/" % ip_files)
+    host_master = create_host("http://%s:1500/" % ip_sv)
     print "-------------MAP REDUCE----------------\nHosts:\nListening Master Server at port 1500"
     registry = host_master.spawn("regis", 'master/Registry')
     os.chdir("../examples")
@@ -74,7 +74,7 @@ def create_hosts():
     sleep(1)
 
 def waitMappers():
-     """
+    """
     Wait for all slaves to be done.
     """
     print "\n\tEsperando a mappers..."
@@ -98,11 +98,12 @@ def lookups():
 if __name__ == "__main__":
     set_context()
     try:
-        if len(sys.argv) != 4:
+        if len(sys.argv) != 5:
             raise IndexError
         num_mappers = int(sys.argv[1])
-        ip_files = str(sys.argv[2])
-        program = str(sys.argv[3])
+        ip_sv = str(sys.argv[2])
+        ip_files = str(sys.argv[3])
+        program = str(sys.argv[4])
     except IndexError:
         print   "\n----------------\nERROR. Los argumentos no son válidos.\n----------------\nArgumentos:"
         print   "\n\tpython master.py [numero_mappers] [ip_servidor_archivos*] [WC ó CW]\n\n\t* si ip_servidor_archivos es 'localhost' = 127.0.0.1\n"
