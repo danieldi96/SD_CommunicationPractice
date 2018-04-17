@@ -43,16 +43,16 @@ class Registry(object):
             print "\n\n\tLas palabras repetidas son: (<palabra, #veces>)"
         print "\n\n\tHa tardado %s segundos" % time
 
-def splitFile(name_f, ip_files, num_mappers):
+def splitFile(name_f, ip_slaves, num_mappers):
     """
     Split the file wich will be read later.
     :param name_f: name of the file.
-    :param ip_files: ip of the Server files.
+    :param ip_slaves: ip of the Server files.
     :param num_mappers: number of mappers.
     """
     try:
         os.chdir("./files")
-        os.system("wget http://%s:8000/%s"%(ip_files,name_f))                                             #We download the file from server
+        os.system("wget http://%s:8000/%s"%(ip_slaves,name_f))                                             #We download the file from server
         num_lines_map = int(commands.getoutput("wc -l "+name_f+" | cut -d ' ' -f 1"))/(num_mappers)         #split -l <num_lines> <name_f>
         os.system("split -l "+str(num_lines_map+1)+" "+name_f)
         os.system("rm "+name_f)
@@ -88,9 +88,9 @@ def lookups():
     global list_mappers, remote_reduce
     list_mappers = {}
     for i in range(0, num_mappers):
-        list_mappers[i] = host_master.lookup_url("http://%s:160%s/Mapper" % (ip_files, str(i)), "Mapper", "mapper")
+        list_mappers[i] = host_master.lookup_url("http://%s:160%s/Mapper" % (ip_slaves, str(i)), "Mapper", "mapper")
         print list_mappers[i]
-    remote_reduce = host_master.lookup_url("http://%s:1700/Reducer" % ip_files, "Reducer", "reduce")
+    remote_reduce = host_master.lookup_url("http://%s:1700/Reducer" % ip_slaves, "Reducer", "reduce")
     print remote_reduce
     remote_reduce.start(num_mappers, registry)
 
@@ -102,14 +102,16 @@ if __name__ == "__main__":
             raise IndexError
         num_mappers = int(sys.argv[1])
         ip_sv = str(sys.argv[2])
-        ip_files = str(sys.argv[3])
+        ip_slaves = str(sys.argv[3])
         program = str(sys.argv[4])
     except IndexError:
         print   "\n----------------\nERROR. Los argumentos no son válidos.\n----------------\nArgumentos:"
-        print   "\n\tpython master.py [numero_mappers] [ip_servidor_archivos*] [WC ó CW]\n\n\t* si ip_servidor_archivos es 'localhost' = 127.0.0.1\n"
+        print   "\n\tpython master.py [numero_mappers] [ip_master] [ip_slaves] [WC ó CW]\n\n\t* si las ip's son 'localhost' = 127.0.0.1\n"
     finally:
-        if ip_files == "localhost":
-            ip_files = "127.0.0.1"
+        if ip_slaves == "localhost":
+            ip_slaves = "127.0.0.1"
+        if ip_sv == "localhost":
+            ip_sv = "127.0.0.1"
         create_hosts()
         name_file = raw_input("\nNombre del fichero: ")
         repeticiones = raw_input("\nNúmero de repeticiones del archivo (1 = Lectura normal): ")
@@ -120,8 +122,8 @@ if __name__ == "__main__":
             os.system("python ../examples/script.py %s %s" % (name_file, repeticiones))
             name_file = "Extended_"+name_file
             os.chdir("../project")
-        splitFile(name_file, ip_files, num_mappers)
+        splitFile(name_file, ip_slaves, num_mappers)
         remote_reduce.startCrono()
         for i in range(0, num_mappers):
-            list_mappers[i].map(remote_reduce, ip_files, program, i)
+            list_mappers[i].map(remote_reduce, ip_slaves, program, i)
         serve_forever()

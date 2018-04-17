@@ -47,17 +47,20 @@ if __name__ == "__main__":
             raise IndexError
         id_mapper = int(sys.argv[1])
         ip = str(sys.argv[2])
+        ip_sv = str(sys.argv[3])
     except IndexError:
         print   "\n----------------\nERROR. Los argumentos no son válidos.\n----------------\nArgumentos:"
-        print   "\n\tpython [nombre_archivo] [id_mapper] [ip_servidor_archivos*]\n\n\t* si ip_servidor_archivos es 'localhost' = 127.0.0.1\n"
+        print   "\n\tpython [nombre_archivo] [id_mapper] [ip_mapper] [ip_master]\n\n\t* si las ip's son 'localhost' = 127.0.0.1\n"
         shutdown()
     finally:
         if ip == "localhost":
             ip = "127.0.0.1"
+        if ip_sv == "localhost":
+            ip_sv = "127.0.0.1"
         host = create_host("http://%s:160%s/" % (ip,id_mapper))
         map = host.spawn("Mapper", "mapper/Mapper")
         print map
         print "\n\tCargando...\n"
-        remote_master = host.lookup_url("http://%s:1500/regis"%ip, 'Registry', 'master')
+        remote_master = host.lookup_url("http://%s:1500/regis"%ip_sv, 'Registry', 'master')
         remote_master.bind("Mapper_%s"%str(id_mapper))
     serve_forever()
