@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from pyactor.context import set_context, create_host, Host, sleep, shutdown
 import time
-import collections
+from collections import Counter
 import sys
 
 class Reducer(object):
@@ -11,8 +11,9 @@ class Reducer(object):
 
     def start(self, nmappers):
         self.finished = nmappers
-        self.dicc = {}
+        self.dicc = Counter()
         self.timeinit = 0
+        self.dicc.update(Word=0)
 
     def startCrono(self):
         self.timeinit = time.time()
@@ -22,22 +23,17 @@ class Reducer(object):
         self.timeinit = timeend - self.timeinit
         print "\n\n\tHa tardado %s segundos" % self.timeinit
 
-    def shuffle(self, dic_map):
-        for key in dic_map.keys():
-            self.dicc[key] = self.dicc.get(key, 0) + dic_map[key]
-
     def wc(self, dic_map):
-        self.shuffle(dic_map)
+        self.dicc.update(dic_map)
         self.finished -= 1
         if self.finished == 0:
-            self.stopCrono()
             for key in self.dicc.keys():
                 print "%s : %s" % (key, self.dicc[key])
+            self.stopCrono()
             print "\n\n\tLas palabras repetidas son: (<palabra, #veces>)"
 
     def cw(self, dic_map):
-        #self.shuffle(dic_map)
-        self.dicc["Word"] = self.dicc.get("Word", 0) + dic_map["Word"]
+        self.dicc.update(dic_map)
         self.finished -= 1
         if self.finished == 0:
             self.stopCrono()

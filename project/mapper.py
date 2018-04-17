@@ -1,37 +1,29 @@
 # -*- coding: utf-8 -*-
 from pyactor.context import set_context, create_host, Host, sleep, shutdown, serve_forever
-import io, sys, urllib, collections, os
+from collections import Counter
+import io, sys, urllib, os
 # Mapper
 class Mapper(object):
-    _tell = ['wc', 'map']
+    _tell = ['map']
     _ask = []
-    _ref = ['map']              
-
-    def wc(self, word_split):
-        for word in word_split:
-            if word != "":
-                if word.endswith("-") or word.startswith("-"):
-                    word.replace("-", "")
-                self.words[word] = self.words.get(word, 0) + 1
-        return self.words
+    _ref = ['map']
 
     def map(self, remote_reducer, ip_files, program, id_mapper):
-        self.words = {}
+        self.words = Counter()
         try:
             self.text = open(("x%s%s"%(chr((id_mapper/26)+97), chr((id_mapper%26)+97))), "r").read().lower()
         except IOError:
             print "\n\nERROR. No se puede abrir el archivo desde el mapper.\n"
         finally:
-            for char in ".,:;!?()[]'\t'":
+            for char in ".,:;!?()[]\"\''\t'":
                 self.text = self.text.replace(char, "")
             self.text = self.text.replace('\n',' ')
             word_split = self.text.split()
             if program == 'WC':
-                remote_reducer.wc(self.wc(word_split))
+                self.words.update(word_split)
+                remote_reducer.wc(self.words)
             elif program == 'CW':
-                key = "Word"
-                for word in word_split:
-                    self.words[key] = self.words.get(key, 0) + 1
+                self.words.update(Word = len(word_split))
                 remote_reducer.cw(self.words)
             else:
                 print "\n\tEl programa seleccionado no se encuentra disponible.\n"

@@ -26,6 +26,7 @@ def cw(word_split):
         words[key] = words.get(key, 0) + 1
 
 if __name__ == "__main__":
+    words = {}
     program = str(sys.argv[1])
     name_file = raw_input("\nIndica el nombre del archivo: ")
     repeticiones = raw_input("\nNúmero de repeticiones del archivo (1 = Lectura normal): ")
@@ -33,14 +34,8 @@ if __name__ == "__main__":
     if repeticiones != 1:
         os.system("python ../examples/script.py %s %s" % (name_file, repeticiones))
         name_file = "Extended_"+name_file
-    words = {}
     crono(0)
-    all_text = open(name_file, "r")
-    text = ""
-    line = ""
-    while line != "":
-        line = all_text.readline()
-        text = text + line
+    text = open(name_file, "r").read()
     for char in ".,:;!?()[]'\t'":
         text = text.replace(char, "")
     text = text.replace('\n',' ')
