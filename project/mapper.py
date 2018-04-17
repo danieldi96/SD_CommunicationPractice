@@ -22,8 +22,9 @@ class Mapper(object):
         """
         self.words = Counter()
         try:
-            os.chdir("./files")
-            self.text = open(("x%s%s"%(chr((id_mapper/26)+97), chr((id_mapper%26)+97))), "r").read().lower()
+            #os.chdir("./files")
+            urllib.urlretrieve("http://%s:8000/x%s%s" % (ip_files, chr((id_mapper/26)+97), chr((id_mapper%26)+97)))
+            #self.text = open(("x%s%s"%(chr((id_mapper/26)+97), chr((id_mapper%26)+97))), "r").read().lower()
         except IOError:
             print "\n\nERROR. No se puede abrir el archivo desde el mapper.\n"
         finally:
