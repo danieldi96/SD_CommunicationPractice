@@ -43,14 +43,14 @@ class Mapper(object):
 if __name__ == "__main__":
     set_context()
     try:
-        if len(sys.argv) != 3:
+        if len(sys.argv) != 4:
             raise IndexError
         id_mapper = int(sys.argv[1])
         ip = str(sys.argv[2])
         ip_sv = str(sys.argv[3])
     except IndexError:
         print   "\n----------------\nERROR. Los argumentos no son válidos.\n----------------\nArgumentos:"
-        print   "\n\tpython [nombre_archivo] [id_mapper] [ip_mapper] [ip_master]\n\n\t* si las ip's son 'localhost' = 127.0.0.1\n"
+        print   "\n\tpython master.py [id_mapper] [ip_mapper] [ip_master]\n\n\t* si las ip's son 'localhost' = 127.0.0.1\n"
         shutdown()
     finally:
         if ip == "localhost":

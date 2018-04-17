@@ -61,10 +61,10 @@ if __name__ == "__main__":
     global remote_master
     set_context()
     try:
-        if len(sys.argv) != 2:
+        if len(sys.argv) != 3:
             raise IndexError
         ip = str(sys.argv[1])
-        ip_sv = str(sys.argv[3])
+        ip_sv = str(sys.argv[2])
     except IndexError:
         print   "\n----------------\nERROR. Los argumentos no son válidos.\n----------------\nArgumentos:"
         print   "\n\tpython reduce.py [ip_reducer] [ip_master]\n\n\t* si las ip's son 'localhost' = 127.0.0.1\n"
