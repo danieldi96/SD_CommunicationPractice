@@ -13,3 +13,4 @@ if __name__ == "__main__" :
         for i in range(0, mappers_total):
             os.system("gnome-terminal -e 'bash -c \"python mapper.py %s %s; exec bash\"'" % (i, ip))
             #os.system("python mapper.py %s %s &" % (i, ip))
+        os.system("gnome-terminal -e 'bash -c \"python reduce.py %s; exec bash\"'" % ip)

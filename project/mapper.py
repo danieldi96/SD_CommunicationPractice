@@ -9,8 +9,20 @@ class Mapper(object):
     _ref = ['map']
 
     def map(self, remote_reducer, ip_files, program, id_mapper):
+        """
+        Open the file, read it and move to lowercase. Replace the characters that can produce
+        an error to a blank space. Then will execute the part of WordCount or CountingWords.
+        On the WordCount part will count the times a word is repeated.
+        On the CountingWord part will add all the word there is on the file.
+        :param remote_reducer: reducer's proxy
+        :param ip_files: ip of the Server files
+        :param program: type of program CW || WC
+        :param id_mapper: number of the mapper
+        :return:
+        """
         self.words = Counter()
         try:
+            os.chdir("./files")
             self.text = open(("x%s%s"%(chr((id_mapper/26)+97), chr((id_mapper%26)+97))), "r").read().lower()
         except IOError:
             print "\n\nERROR. No se puede abrir el archivo desde el mapper.\n"
@@ -42,10 +54,10 @@ if __name__ == "__main__":
     finally:
         if ip == "localhost":
             ip = "127.0.0.1"
-        host = create_host('http://127.0.0.1:200%s/' % str(id_mapper))
+        host = create_host('http://%s:160%s/' % (str(ip),str(id_mapper)))
+        map = host.spawn("Mapper", "mapper/Mapper")
+        print map
         print "\n\tCargando...\n"
-        remote_mapper = host.lookup_url("http://%s:160%s/Mapper"%(ip, id_mapper), 'Mapper', 'mapper')
         remote_master = host.lookup_url("http://%s:1500/regis"%ip, 'Registry', 'master')
         remote_master.bind("Mapper_%s"%str(id_mapper))
-        print remote_mapper
     serve_forever()
