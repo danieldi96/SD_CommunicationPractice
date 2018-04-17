@@ -8,7 +8,7 @@ if __name__ == "__main__" :
         ip = str(sys.argv[2])
         ip_sv = str(sys.argv[3])
     except IndexError, SyntaxError:
-        print "\n\tpython spawn_mappers.py [num_mappers_total] [ip_servidor_archivos*] \n\n\t* si ip_servidor_archivos es 'localhost' = 127.0.0.1\n"
+        print "\n\tpython spawn_mappers.py [num_mappers_total] [ip_reducer] [ip_master] \n\n\t* si las ip's son 'localhost' = 127.0.0.1\n"
     finally:
         print "\nEjecutando..."
         for i in range(0, mappers_total):

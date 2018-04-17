@@ -62,5 +62,5 @@ if __name__ == "__main__":
         print map
         print "\n\tCargando...\n"
         remote_master = host.lookup_url("http://%s:1500/regis"%ip_sv, 'Registry', 'master')
-        remote_master.bind("Mapper_%s"%str(id_mapper))
+        remote_master.bind("Mapper_%s"%str(id_mapper), map)
     serve_forever()

@@ -2,25 +2,27 @@
 
 from pyactor.context import set_context, create_host, shutdown, serve_forever, sleep, Host
 import io, os, sys, commands, urllib
-global registry, remote_reduce, list_mappers, host_master
+global registry, list_slaves, host_master
 
 
 class Registry(object):
     _tell = ['bind', 'results']
-    _ask = ['getMap']
-    _ref = []
+    _ask = ['getMap', 'getActors']
+    _ref = ['bind', 'getActors']
 
     def __init__(self):
         """
         Constructor
         """
+        self.actors = {}
         self.nslaves = 0
 
-    def bind(self, name):
+    def bind(self, name, actor):
         """
         Bind a name to an spawned reference of an actor.
         :param name: name to be recognized with.
         """
+        self.actors[self.nslaves] = actor
         self.nslaves+=1
         print "\nServer registred %s\n" % name
 
@@ -30,6 +32,9 @@ class Registry(object):
         :return: the number of mappers spawned.
         """
         return self.nslaves
+
+    def getActors(self):
+        return self.actors
 
     def results(self,program, dicc, time):
         """
@@ -65,7 +70,7 @@ def create_hosts():
     Creation of master's Host and HTTP Server
     """
     global host_master, registry
-    host_master = create_host("http://%s:1500/" % ip_sv)
+    host_master = create_host("http://%s:1500/" % ip)
     print "-------------MAP REDUCE----------------\nHosts:\nListening Master Server at port 1500"
     registry = host_master.spawn("regis", 'master/Registry')
     os.chdir("../examples")
@@ -85,33 +90,32 @@ def lookups():
     """
     Getting all proxy's
     """
-    global list_mappers, remote_reduce
-    list_mappers = {}
+    global list_slaves
+    list_slaves = registry.getActors()
+    '''
     for i in range(0, num_mappers):
-        list_mappers[i] = host_master.lookup_url("http://%s:160%s/Mapper" % (ip_slaves, str(i)), "Mapper", "mapper")
-        print list_mappers[i]
-    remote_reduce = host_master.lookup_url("http://%s:1700/Reducer" % ip_slaves, "Reducer", "reduce")
-    print remote_reduce
-    remote_reduce.start(num_mappers, registry)
+        list_slaves[i] = host_master.lookup_url("http://%s:160%s/Mapper" % (ip_slaves, str(i)), "Mapper", "mapper")
+        print list_slaves[i]
+    list_slaves[num_mappers] = host_master.lookup_url("http://%s:1700/Reducer" % ip_slaves, "Reducer", "reduce")
+    print list_slaves[num_mappers]
+    '''
+    list_slaves[num_mappers].start(num_mappers, registry)
 
 # Main
 if __name__ == "__main__":
     set_context()
     try:
-        if len(sys.argv) != 5:
+        if len(sys.argv) != 4:
             raise IndexError
         num_mappers = int(sys.argv[1])
-        ip_sv = str(sys.argv[2])
-        ip_slaves = str(sys.argv[3])
-        program = str(sys.argv[4])
+        ip = str(sys.argv[2])
+        program = str(sys.argv[3])
     except IndexError:
         print   "\n----------------\nERROR. Los argumentos no son válidos.\n----------------\nArgumentos:"
-        print   "\n\tpython master.py [numero_mappers] [ip_master] [ip_slaves] [WC ó CW]\n\n\t* si las ip's son 'localhost' = 127.0.0.1\n"
+        print   "\n\tpython master.py [numero_mappers] [ip_master] [WC ó CW]\n\n\t* si las ip es 'localhost' = 127.0.0.1\n"
     finally:
-        if ip_slaves == "localhost":
-            ip_slaves = "127.0.0.1"
-        if ip_sv == "localhost":
-            ip_sv = "127.0.0.1"
+        if ip == "localhost":
+            ip = "127.0.0.1"
         create_hosts()
         name_file = raw_input("\nNombre del fichero: ")
         repeticiones = raw_input("\nNúmero de repeticiones del archivo (1 = Lectura normal): ")
@@ -122,8 +126,8 @@ if __name__ == "__main__":
             os.system("python ../examples/script.py %s %s" % (name_file, repeticiones))
             name_file = "Extended_"+name_file
             os.chdir("../project")
-        splitFile(name_file, ip_slaves, num_mappers)
-        remote_reduce.startCrono()
+        splitFile(name_file, ip, num_mappers)
+        list_slaves[num_mappers].startCrono()
         for i in range(0, num_mappers):
-            list_mappers[i].map(remote_reduce, ip_slaves, program, i)
+            list_slaves[i].map(list_slaves[num_mappers], ip, program, i)
         serve_forever()

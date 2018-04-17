@@ -79,5 +79,5 @@ if __name__ == "__main__":
         print reduce
         print "\n\tCargando...\n"
         remote_master = host.lookup_url("http://%s:1500/regis"%ip_sv, 'Registry', 'master')
-        remote_master.bind("Reducer")
+        remote_master.bind("Reducer", reduce)
         serve_forever()
