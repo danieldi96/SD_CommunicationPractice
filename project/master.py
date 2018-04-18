@@ -56,11 +56,11 @@ def splitFile(name_f, ip_slaves, num_mappers):
     :param num_mappers: number of mappers.
     """
     try:
-        os.chdir("./files")
         os.system("wget http://%s:8000/%s"%(ip_slaves,name_f))                                             #We download the file from server
         num_lines_map = int(commands.getoutput("wc -l "+name_f+" | cut -d ' ' -f 1"))/(num_mappers)         #split -l <num_lines> <name_f>
         os.system("split -l "+str(num_lines_map+1)+" "+name_f)
         os.system("rm "+name_f)
+        os.system("mv ./x* ../../examples")
     except IOError:
         print "\n\tERROR. Ha habido un problema al leer el fichero."
         shutdown()
@@ -70,6 +70,7 @@ def create_hosts():
     Creation of master's Host and HTTP Server
     """
     global host_master, registry
+    print "http://%s:1500/" % ip
     host_master = create_host("http://%s:1500/" % ip)
     print "-------------MAP REDUCE----------------\nHosts:\nListening Master Server at port 1500"
     registry = host_master.spawn("regis", 'master/Registry')
