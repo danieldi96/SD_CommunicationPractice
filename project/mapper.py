@@ -22,8 +22,10 @@ class Mapper(object):
         """
         self.words = Counter()
         try:
-            print "x%s%s" % (chr((id_mapper/26)+97), chr((id_mapper%26)+97))
-            file = urllib.urlopen("http://%s:8000/x%s%s" % (ip_files, chr((id_mapper/26)+97), chr((id_mapper%26)+97)))
+            os.chdir("./files")
+            file_name = "x%s%s" % (chr((id_mapper/26)+97), chr((id_mapper%26)+97))
+            os.system("wget http://%s:8000/%s"%(ip_files, file_name))
+            file = open(file_name, "r")
             self.text = file.read()
         except IOError:
             print "\n\nERROR. No se puede abrir el archivo desde el mapper.\n"

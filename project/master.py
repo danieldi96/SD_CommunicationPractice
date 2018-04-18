@@ -60,7 +60,7 @@ def splitFile(name_f, ip_slaves, num_mappers):
         num_lines_map = int(commands.getoutput("wc -l "+name_f+" | cut -d ' ' -f 1"))/(num_mappers)         #split -l <num_lines> <name_f>
         os.system("split -l "+str(num_lines_map+1)+" "+name_f)
         os.system("rm "+name_f)
-        os.system("mv ./x* ../../examples")
+        os.system("mv ./x* ../examples")
     except IOError:
         print "\n\tERROR. Ha habido un problema al leer el fichero."
         shutdown()
@@ -120,14 +120,14 @@ if __name__ == "__main__":
         create_hosts()
         name_file = raw_input("\nNombre del fichero: ")
         repeticiones = raw_input("\nNúmero de repeticiones del archivo (1 = Lectura normal): ")
-        waitMappers()
-        lookups()
         if repeticiones != 1:
             os.chdir("../examples")
             os.system("python ../examples/script.py %s %s" % (name_file, repeticiones))
             name_file = "Extended_"+name_file
             os.chdir("../project")
         splitFile(name_file, ip, num_mappers)
+        waitMappers()
+        lookups()
         list_slaves[num_mappers].startCrono()
         for i in range(0, num_mappers):
             list_slaves[i].map(list_slaves[num_mappers], ip, program, i)
